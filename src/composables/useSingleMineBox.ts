@@ -1,4 +1,4 @@
-import { toRef, ref, computed, watch, type Ref } from "vue";
+import { toRef, ref, computed, type Ref } from "vue";
 import type { FlagType, RevealType, UpdateFlagType, GetBoxType, UpdateBoxType, SingleMineBoxAxis } from "@/types";
 
 export default function useMineBox(x: number, y: number, refPanelSize: number, refMinesIndexArray: Ref<number[]>) {
@@ -11,8 +11,6 @@ export default function useMineBox(x: number, y: number, refPanelSize: number, r
 
     const isRevealed = computed(() => revealType.value !== null);
     const isMine = computed(() => minesIndexArray.value.includes(index.value));
-
-    watch(minesIndexArray, () => console.log("minesIndexArray", minesIndexArray.value), { immediate: true });
 
     const axis = computed<SingleMineBoxAxis>(() => ({
         x,
