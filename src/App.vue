@@ -1,6 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MineGrid from "@/components/MineGrid.vue";
+</script>
 
 <template>
-    <div></div>
+    <MineGrid />
 </template>
 
