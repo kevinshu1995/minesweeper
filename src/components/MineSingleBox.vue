@@ -17,9 +17,9 @@
 
 <script setup lang="ts">
 import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from "reka-ui";
-import { type SingleMineBoxForComponentProps } from "@/composables/useMineSet";
+import type { SingleMineBoxForComponentProps } from "@/types";
 
-const props = defineProps<{
+defineProps<{
     mine: SingleMineBoxForComponentProps;
     size: number;
 }>();

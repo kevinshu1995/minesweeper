@@ -1,2 +1,2 @@
-export type * from "./mineSet";
+export type * from "./mine";
 
