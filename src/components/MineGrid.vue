@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import MineSingleBox from "./MineSingleBox.vue";
+import GlobalTimer from "./GlobalTimer.vue";
 import useMine from "@/composables/useMineSet";
 
 const { mineSets, gridSize, initMineGrid } = useMine({ mineCounts: 1, panelSize: 5 });
@@ -14,6 +15,7 @@ initMineGrid();
                 <MineSingleBox :mine="col" :size="gridSize" />
             </div>
         </div>
+        <GlobalTimer />
     </div>
 </template>
 
