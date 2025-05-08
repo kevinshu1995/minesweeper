@@ -3,12 +3,17 @@ import { storeToRefs } from "pinia";
 import MineSingleBox from "./MineSingleBox.vue";
 import BaseTimer from "./BaseTimer.vue";
 import BaseSelect from "./base/BaseSelect.vue";
+import BaseDialog from "./base/BaseDialog.vue";
 import { useGameStore } from "@/store/useGame";
 
 const gameStore = useGameStore();
 const { mineSets, gridSize, gameLevelOptions } = storeToRefs(gameStore);
 
 const gameLevel = defineModel<(typeof gameLevelOptions.value)[number]["value"]>();
+
+const gameDialogIsOpen = defineModel<boolean>("dialog", {
+    default: false,
+});
 
 function setupGameHandler() {
     if (gameLevel.value) {
@@ -31,6 +36,8 @@ function setupGameHandler() {
             <button @click="setupGameHandler">Setup Game</button>
         </div>
         <BaseTimer />
+        <button @click="gameDialogIsOpen = true">Open Dialog</button>
+        <BaseDialog v-model="gameDialogIsOpen" :disableEscapeOnClickOutside="true"> hello </BaseDialog>
     </div>
 </template>
 
