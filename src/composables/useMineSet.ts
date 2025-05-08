@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, computed, toRef, type Ref } from "vue";
 import useMineBox from "./useSingleMineBox";
 import type { MineSets } from "@/types";
 
@@ -21,12 +21,12 @@ function tryToGetRandomNumberInRange(size: number, counts: number, skipAxisIndex
     return location;
 }
 
-export default function useMine({ mineCounts, panelSize }: { mineCounts: number; panelSize: number }) {
+export default function useMine({ mineCounts, panelSize }: { mineCounts: Ref<number>; panelSize: Ref<number> }) {
     const mineSets = ref<MineSets | null>(null);
     const hasInitialized = ref(false);
 
-    const mineCount = ref(mineCounts);
-    const gridSize = ref(panelSize);
+    const mineCount = toRef(mineCounts);
+    const gridSize = toRef(panelSize);
     const minesIndexArray = ref<number[]>([]);
 
     const initMineGrid = () => {
@@ -122,7 +122,6 @@ export default function useMine({ mineCounts, panelSize }: { mineCounts: number;
         minesIndexArray,
         hasInitialized,
         initMineGrid,
-        setupMines,
     };
 }
 
