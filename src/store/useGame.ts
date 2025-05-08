@@ -7,17 +7,16 @@ export const useGameStore = defineStore("game", () => {
     const { timeInSeconds, isPaused, toggle: timerToggle, restart: timerRestart, reset: timerReset } = useTimer({ secondsPadStart: 3 });
 
     const gameStatus = ref<GameStatus>("idle");
+    const status = computed(() => gameStatus.value);
 
     const gameMines = ref(0);
     const gamePanelSize = ref(0);
 
-    const status = computed(() => gameStatus.value);
-
     function startGame() {
         timerRestart();
     }
-    function stopGame() {
-        if (isPaused.value === false) timerToggle();
+    function toggleGame() {
+        timerToggle();
     }
     function resetGame() {
         timerReset();
@@ -29,24 +28,24 @@ export const useGameStore = defineStore("game", () => {
         timerReset();
     }
 
-    const gameLevelMap = computed(() => ({
-        easy: {
-            mineCounts: 10,
-            panelSize: 10,
-        },
-        normal: {
-            mineCounts: 40,
-            panelSize: 16,
-        },
-        hard: {
-            mineCounts: 99,
-            panelSize: 30,
-        },
-        extraHard: {
-            mineCounts: 200,
-            panelSize: 50,
-        },
-    }));
+    // const gameLevelMap = computed(() => ({
+    //     easy: {
+    //         mineCounts: 10,
+    //         panelSize: 10,
+    //     },
+    //     normal: {
+    //         mineCounts: 40,
+    //         panelSize: 16,
+    //     },
+    //     hard: {
+    //         mineCounts: 99,
+    //         panelSize: 30,
+    //     },
+    //     extraHard: {
+    //         mineCounts: 200,
+    //         panelSize: 50,
+    //     },
+    // }));
 
     return {
         status,
@@ -54,7 +53,7 @@ export const useGameStore = defineStore("game", () => {
         isTimerPaused: isPaused,
 
         startGame,
-        stopGame,
+        toggleGame,
         resetGame,
         setupGame,
     };
