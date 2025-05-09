@@ -6,7 +6,12 @@ const open = defineModel<boolean>({ default: false });
 
 defineProps<{
     disableEscapeOnClickOutside?: boolean;
+    closeBtn?: boolean;
 }>();
+
+function close() {
+    open.value = false;
+}
 </script>
 
 <template>
@@ -21,10 +26,11 @@ defineProps<{
                     if (target?.closest('[data-dialog-overlay]')) return event.preventDefault()
                 }"
             >
-                <slot :open="open" />
+                <slot :open="open" :close="close" />
                 <DialogClose
                     class="text-neutral-900 hover:bg-neutral-200 focus:shadow-neutral-700 absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-0 cursor-pointer"
                     aria-label="Close"
+                    v-if="closeBtn"
                 >
                     <Icon icon="lucide:x" />
                 </DialogClose>
