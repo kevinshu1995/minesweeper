@@ -61,6 +61,7 @@ export type SingleMineBoxAxis = {
 export type SingleMineBox = {
     axis: SingleMineBoxAxis;
     index: number;
+    state: RevealType | FlagType;
     isMine: boolean;
     isRevealed: boolean;
     flagType: FlagType;
@@ -70,9 +71,23 @@ export type SingleMineBox = {
     updateFlagType: UpdateFlagType;
 };
 
+export type UseSingleMineBoxReturn = {
+    axis: ComputedRef<SingleMineBox["axis"]>;
+    state: ComputedRef<SingleMineBox["state"]>;
+    index: ComputedRef<SingleMineBox["index"]>;
+    isMine: ComputedRef<SingleMineBox["isMine"]>;
+    isRevealed: ComputedRef<SingleMineBox["isRevealed"]>;
+    flagType: Ref<SingleMineBox["flagType"]>;
+    revealType: Ref<SingleMineBox["revealType"]>;
+    getBoxType: SingleMineBox["getBoxType"];
+    updateFlagType: SingleMineBox["updateFlagType"];
+    updateBoxType: SingleMineBox["updateBoxType"];
+};
+
 export type SingleMineBoxForComponentProps = {
     id: string;
     axis: SingleMineBox["axis"];
+    state: SingleMineBox["state"];
     index: SingleMineBox["index"];
     isMine: SingleMineBox["isMine"];
     isRevealed: SingleMineBox["isRevealed"];
@@ -86,6 +101,7 @@ export type SingleMineBoxForComponentProps = {
 export type MineSets = {
     id: ComputedRef<string>;
     axis: ComputedRef<SingleMineBox["axis"]>;
+    state: ComputedRef<SingleMineBox["state"]>;
     index: ComputedRef<SingleMineBox["index"]>;
     isMine: ComputedRef<SingleMineBox["isMine"]>;
     isRevealed: ComputedRef<SingleMineBox["isRevealed"]>;
@@ -95,3 +111,4 @@ export type MineSets = {
     updateFlagType: SingleMineBox["updateFlagType"];
     revealBox: () => { type: SingleMineBox["revealType"] };
 }[][];
+

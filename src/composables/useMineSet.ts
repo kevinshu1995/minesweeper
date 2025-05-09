@@ -37,6 +37,7 @@ export default function useMine({ mineCounts, panelSize }: { mineCounts: Ref<num
                 const {
                     axis,
                     index,
+                    state,
                     isMine,
                     isRevealed,
                     flagType,
@@ -93,6 +94,7 @@ export default function useMine({ mineCounts, panelSize }: { mineCounts: Ref<num
                     id,
                     axis,
                     index,
+                    state,
                     isMine,
                     isRevealed,
                     flagType,
