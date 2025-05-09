@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import MineSingleBox from "./MineSingleBox.vue";
-import BaseTimer from "./BaseTimer.vue";
+import BaseTimer from "./base/BaseTimer.vue";
 import BaseSelect from "./base/BaseSelect.vue";
 import BaseDialog from "./base/BaseDialog.vue";
 import { useGameStore } from "@/store/useGame";
