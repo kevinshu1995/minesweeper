@@ -1,8 +1,23 @@
-import { defineConfig } from "unocss";
+import { defineConfig, presetWebFonts } from "unocss";
 import presetWind4 from "@unocss/preset-wind4";
 
 export default defineConfig({
-    presets: [presetWind4()],
+    presets: [
+        presetWind4(),
+        presetWebFonts({
+            themeKey: "font",
+            provider: "google",
+            extendTheme: true,
+            fonts: {
+                sans: [
+                    {
+                        name: "Belanosima",
+                        weights: ["400", "600", "700"],
+                    },
+                ],
+            },
+        }),
+    ],
     theme: {
         animation: {
             keyframes: {

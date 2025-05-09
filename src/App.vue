@@ -4,7 +4,7 @@ import BaseDevInfoPanel from "@/components/base/BaseDevInfoPanel.vue";
 </script>
 
 <template>
-    <div>
+    <div class="font-belanosima text-neutral-700">
         <MineGrid />
         <BaseDevInfoPanel />
     </div>
