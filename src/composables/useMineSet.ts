@@ -21,55 +21,61 @@ function tryToGetRandomNumberInRange(size: number, counts: number, skipAxisIndex
 }
 
 type RevealBoxReturn = {
-    type: UseMineBoxReturn["revealType"]["value"] | ReturnType<UseMineBoxReturn["updateBoxType"]> | number;
+    type: UseMineBoxReturn["revealType"]["value"] | ReturnType<UseMineBoxReturn["updateBoxRevealType"]> | number;
 };
 
 type MineSets =
-    | (Omit<UseMineBoxReturn, "updateBoxType"> & {
+    | (Omit<UseMineBoxReturn, "updateBoxRevealType"> & {
           id: ComputedRef<string>;
           revealBox: () => RevealBoxReturn;
       })[][]
     | null;
 
-export default function useMine({ mineCounts, panelSize }: { mineCounts: Ref<number>; panelSize: Ref<number> }) {
+export default function useMine(options: { totalMineCount: Ref<number>; panelSize: Ref<number> }) {
+    /** @description 整個遊戲的二維陣列 */
     const mineSets = ref<MineSets>(null);
     const hasInitialized = ref(false);
 
-    const mineCount = toRef(mineCounts);
-    const gridSize = toRef(panelSize);
+    const totalMineCount = toRef(options.totalMineCount);
+    const panelSize = toRef(options.panelSize);
+
+    /** @description 所有地雷的 index 陣列 */
     const minesIndexArray = ref<number[]>([]);
 
     const hasRevealedMine = ref(false);
 
-    const initMineGrid = () => {
+    /** @description 初始化整個遊戲的二維陣列 */
+    const initMineSets = () => {
         hasInitialized.value = false;
 
-        mineSets.value = Array.from({ length: gridSize.value }, (_, y) =>
-            Array.from({ length: gridSize.value }, (_, x) => {
+        mineSets.value = Array.from({ length: panelSize.value }, (_, y) =>
+            Array.from({ length: panelSize.value }, (_, x) => {
                 const {
                     axis,
                     index,
-                    state,
+                    revealState,
                     isMine,
                     isRevealed,
                     flagType,
                     revealType,
 
-                    getBoxType,
-                    updateBoxType,
+                    getBoxRevealType,
+                    updateBoxRevealType,
                     updateFlagType,
-                } = useMineBox(x, y, gridSize.value, minesIndexArray);
+                } = useMineBox(x, y, panelSize.value, minesIndexArray);
 
+                /** @description 此格的 id */
                 const id = computed(() => {
                     return `mine-box-${index.value}`;
                 });
 
+                /** @description 顯示這個格子的實際狀態 */
                 const revealBox = () => {
                     if (isRevealed.value || hasRevealedMine.value) {
                         return { type: revealType.value };
                     }
-                    setupMines && setupMines({ x, y });
-                    const { type } = updateBoxType();
+                    tryToSetupMines && tryToSetupMines({ x, y });
+                    const { type } = updateBoxRevealType();
                     if (type === "mine") {
                         // game over
                         hasRevealedMine.value = true;
@@ -77,7 +83,7 @@ export default function useMine({ mineCounts, panelSize }: { mineCounts: Ref<num
                     }
                     if (type === 0) {
                         function revealSurroundingBoxes(index: number) {
-                            const surroundingBox = mineSets.value?.[Math.floor(index / gridSize.value)][index % gridSize.value];
+                            const surroundingBox = mineSets.value?.[Math.floor(index / panelSize.value)][index % panelSize.value];
                             if (surroundingBox && !surroundingBox.isRevealed) {
                                 surroundingBox.revealBox();
                             }
@@ -107,14 +113,14 @@ export default function useMine({ mineCounts, panelSize }: { mineCounts: Ref<num
                     id,
                     axis,
                     index,
-                    state,
+                    revealState,
                     isMine,
                     isRevealed,
                     flagType,
                     revealType,
 
-                    getBoxType,
-                    // updateBoxType,
+                    getBoxRevealType,
+                    // updateBoxRevealType,
                     revealBox,
                     updateFlagType,
                 };
@@ -122,22 +128,23 @@ export default function useMine({ mineCounts, panelSize }: { mineCounts: Ref<num
         );
     };
 
-    const setupMines = (skipAxis: { x: number; y: number }) => {
+    /** @description 如果還沒設定的話，嘗試設定全部的地雷位置（update `minesIndexArray`） */
+    const tryToSetupMines = (skipAxis: { x: number; y: number }) => {
         if (hasInitialized.value || mineSets.value === null) {
             return;
         }
         hasInitialized.value = true;
-        const skipAxisIndex = skipAxis.y * gridSize.value + skipAxis.x;
-        minesIndexArray.value = tryToGetRandomNumberInRange(gridSize.value, mineCount.value, skipAxisIndex);
+        const skipAxisIndex = skipAxis.y * panelSize.value + skipAxis.x;
+        minesIndexArray.value = tryToGetRandomNumberInRange(panelSize.value, totalMineCount.value, skipAxisIndex);
     };
 
     return {
         mineSets,
-        gridSize,
+        panelSize,
         minesIndexArray,
         hasInitialized,
         hasRevealedMine,
-        initMineGrid,
+        initMineSets,
     };
 }
 

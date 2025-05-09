@@ -7,7 +7,7 @@ import BaseDialog from "./base/BaseDialog.vue";
 import { useGameStore } from "@/store/useGame";
 
 const gameStore = useGameStore();
-const { mineSets, gridSize, gameLevelOptions } = storeToRefs(gameStore);
+const { mineSets, panelSize, gameLevelOptions } = storeToRefs(gameStore);
 
 const gameLevel = defineModel<(typeof gameLevelOptions.value)[number]["value"]>();
 
@@ -27,7 +27,7 @@ function setupGameHandler() {
         <div v-if="mineSets">
             <div v-for="(row, rowIndex) in mineSets" :key="rowIndex" class="flex">
                 <div v-for="(col, colIndex) in row" :key="colIndex">
-                    <MineSingleBox :mine="col" :size="gridSize" />
+                    <MineSingleBox :mine="col" :size="panelSize" />
                 </div>
             </div>
         </div>

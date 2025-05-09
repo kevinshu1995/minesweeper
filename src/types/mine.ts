@@ -4,7 +4,7 @@ export type RevealType = "mine" | null | number;
 /** @description flag: 標記炸彈 | question: 疑問 | null: 尚未標記 */
 export type FlagType = "flag" | "question" | null;
 
-export type UpdateBoxTypeReturn = {
+export type UpdateBoxRevealTypeReturn = {
     ok: true;
     type: RevealType;
 };
@@ -18,8 +18,8 @@ export type UpdateFlagTypeReturn =
           ok: false;
       };
 
-export type GetBoxType = () => RevealType;
-export type UpdateBoxType = () => UpdateBoxTypeReturn;
+export type GetBoxRevealType = () => RevealType;
+export type UpdateBoxRevealType = () => UpdateBoxRevealTypeReturn;
 export type UpdateFlagType = () => UpdateFlagTypeReturn;
 
 export type SurroundBoxesIndex = {
@@ -58,9 +58,9 @@ export type SingleMineBox = {
     /** @description 此格揭露的狀態 */
     revealType: RevealType;
     /** @description 取得此格的狀態（沒有 side effect） */
-    getBoxType: GetBoxType;
+    getBoxRevealType: GetBoxRevealType;
     /** @description 揭露此格（更新 revealType) */
-    updateBoxType: UpdateBoxType;
+    updateBoxRevealType: UpdateBoxRevealType;
     /** @description 改變此格的使用者標記的狀態（更新 flagType) */
     updateFlagType: UpdateFlagType;
 };

@@ -6,9 +6,9 @@ import useMineSet from "@/composables/useMineSet";
 
 export const useGameStore = defineStore("game", () => {
     const { timeInSeconds, isPaused, toggle: timerToggle, restart: timerRestart, reset: timerReset } = useTimer({ secondsPadStart: 3 });
-    const gameMineCounts = ref(0);
+    const gameTotalMineCount = ref(0);
     const gamePanelSize = ref(0);
-    const { mineSets, gridSize, hasInitialized, initMineGrid } = useMineSet({ mineCounts: gameMineCounts, panelSize: gamePanelSize });
+    const { mineSets, panelSize, hasInitialized, initMineSets } = useMineSet({ totalMineCount: gameTotalMineCount, panelSize: gamePanelSize });
 
     const gameStatus = ref<GameStatus>("idle");
     const status = computed(() => gameStatus.value);
@@ -22,15 +22,15 @@ export const useGameStore = defineStore("game", () => {
     function resetGame() {
         timerReset();
         gameStatus.value = "idle";
-        gameMineCounts.value = 0;
+        gameTotalMineCount.value = 0;
         gamePanelSize.value = 0;
     }
     function setupGame(level: GameLevel) {
         const { mineCounts, panelSize } = gameLevelMap.value[level];
-        gameMineCounts.value = mineCounts;
+        gameTotalMineCount.value = mineCounts;
         gamePanelSize.value = panelSize;
         timerReset();
-        initMineGrid();
+        initMineSets();
     }
 
     type GameLevel = "easy" | "normal" | "hard" | "extraHard";
@@ -74,7 +74,7 @@ export const useGameStore = defineStore("game", () => {
 
         hasInitialized,
         mineSets,
-        gridSize,
+        panelSize,
         gameLevelMap,
         gameLevelOptions,
 

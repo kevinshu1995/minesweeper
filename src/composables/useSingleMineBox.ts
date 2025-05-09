@@ -1,5 +1,5 @@
 import { toRef, ref, computed, type Ref } from "vue";
-import type { FlagType, RevealType, UpdateFlagType, GetBoxType, UpdateBoxType, SingleMineBoxAxis } from "@/types";
+import type { FlagType, RevealType, UpdateFlagType, GetBoxRevealType, UpdateBoxRevealType, SingleMineBoxAxis } from "@/types";
 
 export default function useMineBox(x: number, y: number, refPanelSize: number, refMinesIndexArray: Ref<number[]>) {
     const minesIndexArray = toRef(refMinesIndexArray, "value");
@@ -12,7 +12,7 @@ export default function useMineBox(x: number, y: number, refPanelSize: number, r
     const isRevealed = computed(() => revealType.value !== null);
     const isMine = computed(() => minesIndexArray.value.includes(index.value));
 
-    const state = computed(() => {
+    const revealState = computed(() => {
         if (revealType.value !== null) return revealType.value;
         return flagType.value;
     });
@@ -32,7 +32,7 @@ export default function useMineBox(x: number, y: number, refPanelSize: number, r
         },
     }));
 
-    const getBoxType: GetBoxType = () => {
+    const getBoxRevealType: GetBoxRevealType = () => {
         if (isMine.value) {
             return "mine";
         }
@@ -44,8 +44,8 @@ export default function useMineBox(x: number, y: number, refPanelSize: number, r
         }, 0);
     };
 
-    const updateBoxType: UpdateBoxType = () => {
-        const type = getBoxType();
+    const updateBoxRevealType: UpdateBoxRevealType = () => {
+        const type = getBoxRevealType();
         revealType.value = type;
         return {
             ok: true,
@@ -73,14 +73,14 @@ export default function useMineBox(x: number, y: number, refPanelSize: number, r
     return {
         axis,
         index,
-        state,
+        revealState,
         isMine,
         isRevealed,
         flagType,
         revealType,
 
-        getBoxType,
-        updateBoxType,
+        getBoxRevealType,
+        updateBoxRevealType,
         updateFlagType,
     };
 }

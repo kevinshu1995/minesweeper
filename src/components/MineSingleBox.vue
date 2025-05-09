@@ -3,7 +3,7 @@
         <HoverCardRoot>
             <HoverCardTrigger>
                 <button @click="mine.revealBox" @contextmenu.prevent="mine.updateFlagType" class="w-full h-full cursor-pointer">
-                    {{ mine.state }}
+                    {{ mine.revealState }}
                     <div v-if="mine.isMine">💀</div>
                 </button>
             </HoverCardTrigger>
