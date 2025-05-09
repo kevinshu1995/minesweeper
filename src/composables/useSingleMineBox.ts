@@ -1,7 +1,7 @@
 import { toRef, ref, computed, type Ref } from "vue";
-import type { FlagType, RevealType, UpdateFlagType, GetBoxType, UpdateBoxType, SingleMineBoxAxis, UseSingleMineBoxReturn } from "@/types";
+import type { FlagType, RevealType, UpdateFlagType, GetBoxType, UpdateBoxType, SingleMineBoxAxis } from "@/types";
 
-export default function useMineBox(x: number, y: number, refPanelSize: number, refMinesIndexArray: Ref<number[]>): UseSingleMineBoxReturn {
+export default function useMineBox(x: number, y: number, refPanelSize: number, refMinesIndexArray: Ref<number[]>) {
     const minesIndexArray = toRef(refMinesIndexArray, "value");
     const panelSize = toRef(refPanelSize);
 
@@ -84,4 +84,6 @@ export default function useMineBox(x: number, y: number, refPanelSize: number, r
         updateFlagType,
     };
 }
+
+export type UseMineBoxReturn = ReturnType<typeof useMineBox>;
 

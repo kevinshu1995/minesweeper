@@ -1,5 +1,3 @@
-import type { ComputedRef, Ref } from "vue";
-
 /** @description mine: 炸彈 | null:尚未揭示 | number: 附近八格有幾個炸彈 */
 export type RevealType = "mine" | null | number;
 
@@ -70,45 +68,4 @@ export type SingleMineBox = {
     updateBoxType: UpdateBoxType;
     updateFlagType: UpdateFlagType;
 };
-
-export type UseSingleMineBoxReturn = {
-    axis: ComputedRef<SingleMineBox["axis"]>;
-    state: ComputedRef<SingleMineBox["state"]>;
-    index: ComputedRef<SingleMineBox["index"]>;
-    isMine: ComputedRef<SingleMineBox["isMine"]>;
-    isRevealed: ComputedRef<SingleMineBox["isRevealed"]>;
-    flagType: Ref<SingleMineBox["flagType"]>;
-    revealType: Ref<SingleMineBox["revealType"]>;
-    getBoxType: SingleMineBox["getBoxType"];
-    updateFlagType: SingleMineBox["updateFlagType"];
-    updateBoxType: SingleMineBox["updateBoxType"];
-};
-
-export type SingleMineBoxForComponentProps = {
-    id: string;
-    axis: SingleMineBox["axis"];
-    state: SingleMineBox["state"];
-    index: SingleMineBox["index"];
-    isMine: SingleMineBox["isMine"];
-    isRevealed: SingleMineBox["isRevealed"];
-    flagType: SingleMineBox["flagType"];
-    revealType: SingleMineBox["revealType"];
-    getBoxType: SingleMineBox["getBoxType"];
-    updateFlagType: SingleMineBox["updateFlagType"];
-    revealBox: () => { type: SingleMineBox["revealType"] };
-};
-
-export type MineSets = {
-    id: ComputedRef<string>;
-    axis: ComputedRef<SingleMineBox["axis"]>;
-    state: ComputedRef<SingleMineBox["state"]>;
-    index: ComputedRef<SingleMineBox["index"]>;
-    isMine: ComputedRef<SingleMineBox["isMine"]>;
-    isRevealed: ComputedRef<SingleMineBox["isRevealed"]>;
-    flagType: Ref<SingleMineBox["flagType"]>;
-    revealType: Ref<SingleMineBox["revealType"]>;
-    getBoxType: SingleMineBox["getBoxType"];
-    updateFlagType: SingleMineBox["updateFlagType"];
-    revealBox: () => { type: SingleMineBox["revealType"] };
-}[][];
 

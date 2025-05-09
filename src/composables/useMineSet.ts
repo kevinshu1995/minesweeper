@@ -1,6 +1,5 @@
-import { ref, computed, toRef, type Ref } from "vue";
-import useMineBox from "./useSingleMineBox";
-import type { MineSets } from "@/types";
+import { ref, computed, toRef, type Ref, type ComputedRef } from "vue";
+import useMineBox, { type UseMineBoxReturn } from "./useSingleMineBox";
 
 function getRandomNumberInRange(max: number, count: number) {
     const min = 0;
@@ -21,13 +20,26 @@ function tryToGetRandomNumberInRange(size: number, counts: number, skipAxisIndex
     return location;
 }
 
+type RevealBoxReturn = {
+    type: UseMineBoxReturn["revealType"]["value"] | ReturnType<UseMineBoxReturn["updateBoxType"]> | number;
+};
+
+type MineSets =
+    | (Omit<UseMineBoxReturn, "updateBoxType"> & {
+          id: ComputedRef<string>;
+          revealBox: () => RevealBoxReturn;
+      })[][]
+    | null;
+
 export default function useMine({ mineCounts, panelSize }: { mineCounts: Ref<number>; panelSize: Ref<number> }) {
-    const mineSets = ref<MineSets | null>(null);
+    const mineSets = ref<MineSets>(null);
     const hasInitialized = ref(false);
 
     const mineCount = toRef(mineCounts);
     const gridSize = toRef(panelSize);
     const minesIndexArray = ref<number[]>([]);
+
+    const hasRevealedMine = ref(false);
 
     const initMineGrid = () => {
         hasInitialized.value = false;
@@ -53,13 +65,14 @@ export default function useMine({ mineCounts, panelSize }: { mineCounts: Ref<num
                 });
 
                 const revealBox = () => {
-                    if (isRevealed.value) {
+                    if (isRevealed.value || hasRevealedMine.value) {
                         return { type: revealType.value };
                     }
                     setupMines && setupMines({ x, y });
                     const { type } = updateBoxType();
                     if (type === "mine") {
                         // game over
+                        hasRevealedMine.value = true;
                         return { type };
                     }
                     if (type === 0) {
@@ -123,7 +136,10 @@ export default function useMine({ mineCounts, panelSize }: { mineCounts: Ref<num
         gridSize,
         minesIndexArray,
         hasInitialized,
+        hasRevealedMine,
         initMineGrid,
     };
 }
+
+export type UseMineReturn = ReturnType<typeof useMine>;
 

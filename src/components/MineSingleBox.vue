@@ -19,10 +19,10 @@
 
 <script setup lang="ts">
 import { HoverCardArrow, HoverCardContent, HoverCardPortal, HoverCardRoot, HoverCardTrigger } from "reka-ui";
-import type { SingleMineBoxForComponentProps } from "@/types";
+import type { UseMineReturn } from "@/composables/useMineSet";
 
 defineProps<{
-    mine: SingleMineBoxForComponentProps;
+    mine: NonNullable<UseMineReturn["mineSets"]["value"]>[number][number];
     size: number;
 }>();
 </script>
