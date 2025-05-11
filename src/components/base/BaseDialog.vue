@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot } from "reka-ui";
+import { DialogClose, DialogContent, DialogOverlay, DialogTitle, DialogDescription, DialogPortal, DialogRoot } from "reka-ui";
 
 const open = defineModel<boolean>({ default: false });
 
@@ -30,7 +30,12 @@ function close() {
                     if (target?.closest('[data-dialog-overlay]')) return event.preventDefault()
                 }"
             >
-                <slot :open="open" :close="close" />
+                <DialogTitle>
+                    <slot name="title"></slot>
+                </DialogTitle>
+                <DialogDescription>
+                    <slot :open="open" :close="close" />
+                </DialogDescription>
                 <DialogClose
                     class="text-neutral-900 hover:bg-neutral-200 focus:shadow-neutral-700 absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-0 cursor-pointer"
                     aria-label="Close"
