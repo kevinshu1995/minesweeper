@@ -76,10 +76,17 @@ function setupGameHandler() {
                                 <span>You've not selected <span class="font-600">game level</span> yet!</span>
                             </template>
                         </BaseTooltip>
-                        <button class="text-neutral-600 flex gap-1 items-center cursor-pointer hover:scale-102 hover:text-neutral-700 transition-all self-center">
-                            <Icon icon="radix-icons:question-mark-circled" class="h-4 w-4 inline-block" />
-                            <span>How to play?</span>
-                        </button>
+                        <div class="flex justify-center">
+                            <button
+                                class="text-neutral-600 flex gap-1 items-center cursor-pointer hover:text-neutral-700 transition-all self-center px-5 relative group hover:underline underline-offset-2 transition-all"
+                            >
+                                <Icon
+                                    icon="radix-icons:question-mark-circled"
+                                    class="h-4 w-4 inline-block absolute left-0 group-hover:opacity-100 opacity-0 group-hover:translate-x-0 -translate-x-4 transition-all"
+                                />
+                                <span>How to play?</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <p class="font-400 text-2.5 text-neutral-400 mt-4 text-center">MIT Licensed | Copyright © 2025-present Wen-Hsiu Hsiu</p>
