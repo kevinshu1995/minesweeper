@@ -4,10 +4,14 @@ import type { GameStatus } from "@/types";
 import useTimer from "@/composables/useTimer";
 import useMineSet from "@/composables/useMineSet";
 
+type GameLevel = "easy" | "normal" | "hard" | "extraHard";
+type GameLevelMap = Record<GameLevel, { mineCounts: number; panelSize: number; label: string }>;
+
 export const useGameStore = defineStore("game", () => {
     const { timeInSeconds, isPaused, toggle: timerToggle, restart: timerRestart, reset: timerReset } = useTimer({ secondsPadStart: 3 });
     const gameTotalMineCount = ref(0);
     const gamePanelSize = ref(0);
+    const gameLevel = ref<GameLevel | null>(null);
     const { mineSets, panelSize, hasInitialized, initMineSets } = useMineSet({ totalMineCount: gameTotalMineCount, panelSize: gamePanelSize });
 
     const gameStatus = ref<GameStatus>("idle");
@@ -26,15 +30,13 @@ export const useGameStore = defineStore("game", () => {
         gamePanelSize.value = 0;
     }
     function setupGame(level: GameLevel) {
+        gameLevel.value = level;
         const { mineCounts, panelSize } = gameLevelMap.value[level];
         gameTotalMineCount.value = mineCounts;
         gamePanelSize.value = panelSize;
         timerReset();
         initMineSets();
     }
-
-    type GameLevel = "easy" | "normal" | "hard" | "extraHard";
-    type GameLevelMap = Record<GameLevel, { mineCounts: number; panelSize: number; label: string }>;
 
     const gameLevelMap = computed<GameLevelMap>(() => ({
         easy: {
@@ -67,6 +69,11 @@ export const useGameStore = defineStore("game", () => {
         }));
     });
 
+    const currentGameLevel = computed(() => {
+        if (gameLevel.value === null) return null;
+        return gameLevelMap.value[gameLevel.value];
+    });
+
     return {
         status,
         timeInSeconds,
@@ -77,6 +84,7 @@ export const useGameStore = defineStore("game", () => {
         panelSize,
         gameLevelMap,
         gameLevelOptions,
+        currentGameLevel,
 
         startGame,
         toggleGame,
