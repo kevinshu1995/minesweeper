@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import { storeToRefs } from "pinia";
-import MineSingleBox from "./MineSingleBox.vue";
+import MineSingleTile from "./MineSingleTile.vue";
 import BaseSelect from "./base/BaseSelect.vue";
 import BaseDialog from "./base/BaseDialog.vue";
 import BaseButton from "./base/BaseButton.vue";
@@ -35,7 +35,7 @@ function setupGameHandler() {
         <div v-if="mineSets" :class="[isTimerPaused && 'blur pointer-events-none']">
             <div v-for="(row, rowIndex) in mineSets" :key="rowIndex" class="flex">
                 <div v-for="(col, colIndex) in row" :key="colIndex">
-                    <MineSingleBox :mine="col" :size="panelSize" />
+                    <MineSingleTile :mine="col" :size="panelSize" />
                 </div>
             </div>
         </div>

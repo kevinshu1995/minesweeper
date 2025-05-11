@@ -1,6 +1,6 @@
 <template>
     <div class="size-10 border border-neutral-200 m-px" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
-        <button @click="mine.revealBox" @contextmenu.prevent="mine.updateFlagType" class="w-full h-full cursor-pointer">
+        <button @click="mine.revealTile" @contextmenu.prevent="mine.updateFlagType" class="w-full h-full cursor-pointer">
             {{ mine.revealState }}
             <div v-if="mine.isMine">💀</div>
         </button>
@@ -39,14 +39,14 @@ function onMouseEnter() {
                         ? {
                               x: formatContent(value.x),
                               y: formatContent(value.y),
-                              bottom: formatContent(value.surroundBoxesIndex.bottom),
-                              top: formatContent(value.surroundBoxesIndex.top),
-                              left: formatContent(value.surroundBoxesIndex.left),
-                              right: formatContent(value.surroundBoxesIndex.right),
-                              "top left": formatContent(value.surroundBoxesIndex.topLeft),
-                              "top right": formatContent(value.surroundBoxesIndex.topRight),
-                              "bottom left": formatContent(value.surroundBoxesIndex.bottomLeft),
-                              "bottom right": formatContent(value.surroundBoxesIndex.bottomRight),
+                              bottom: formatContent(value.surroundTilesIndex.bottom),
+                              top: formatContent(value.surroundTilesIndex.top),
+                              left: formatContent(value.surroundTilesIndex.left),
+                              right: formatContent(value.surroundTilesIndex.right),
+                              "top left": formatContent(value.surroundTilesIndex.topLeft),
+                              "top right": formatContent(value.surroundTilesIndex.topRight),
+                              "bottom left": formatContent(value.surroundTilesIndex.bottomLeft),
+                              "bottom right": formatContent(value.surroundTilesIndex.bottomRight),
                           }
                         : "";
                     return { title: "axis", content: content };

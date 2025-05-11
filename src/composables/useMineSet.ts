@@ -1,6 +1,5 @@
 import { ref, computed, toRef, type Ref, type ComputedRef } from "vue";
-import useMineBox, { type UseMineBoxReturn } from "./useSingleMineBox";
-import { is } from "date-fns/locale";
+import useMineTile, { type UseMineTileReturn } from "./useSingleMineTile";
 
 function getRandomNumberInRange(max: number, count: number) {
     const min = 0;
@@ -21,14 +20,14 @@ function tryToGetRandomNumberInRange(size: number, counts: number, skipAxisIndex
     return location;
 }
 
-type RevealBoxReturn = {
-    type: UseMineBoxReturn["revealType"]["value"] | ReturnType<UseMineBoxReturn["updateBoxRevealType"]> | number;
+type RevealTileReturn = {
+    type: UseMineTileReturn["revealType"]["value"] | ReturnType<UseMineTileReturn["updateTileRevealType"]> | number;
 };
 
 type MineSets =
-    | (Omit<UseMineBoxReturn, "updateBoxRevealType"> & {
+    | (Omit<UseMineTileReturn, "updateTileRevealType"> & {
           id: ComputedRef<string>;
-          revealBox: () => RevealBoxReturn;
+          revealTile: () => RevealTileReturn;
       })[][]
     | null;
 
@@ -72,10 +71,10 @@ export default function useMine(options: { totalMineCount: Ref<number>; panelSiz
                     flagType,
                     revealType,
 
-                    getBoxRevealType,
-                    updateBoxRevealType,
+                    getTileRevealType,
+                    updateTileRevealType,
                     updateFlagType: _updateFlagType,
-                } = useMineBox(x, y, panelSize.value, minesIndexArray);
+                } = useMineTile(x, y, panelSize.value, minesIndexArray);
 
                 /** @description 此格的 id */
                 const id = computed(() => {
@@ -83,40 +82,40 @@ export default function useMine(options: { totalMineCount: Ref<number>; panelSiz
                 });
 
                 /** @description 顯示這個格子的實際狀態 */
-                const revealBox = () => {
+                const revealTile = () => {
                     if (isRevealed.value || hasRevealedMine.value) {
                         return { type: revealType.value };
                     }
                     tryToSetupMines && tryToSetupMines({ x, y });
-                    const { type } = updateBoxRevealType();
+                    const { type } = updateTileRevealType();
                     if (type === "mine") {
                         // game over
                         hasRevealedMine.value = true;
                         return { type };
                     }
                     if (type === 0) {
-                        function revealSurroundingBoxes(index: number) {
-                            const surroundingBox = mineSets.value?.[Math.floor(index / panelSize.value)][index % panelSize.value];
-                            if (surroundingBox && !surroundingBox.isRevealed) {
-                                surroundingBox.revealBox();
+                        function revealSurroundingTiles(index: number) {
+                            const surroundingTile = mineSets.value?.[Math.floor(index / panelSize.value)][index % panelSize.value];
+                            if (surroundingTile && !surroundingTile.isRevealed) {
+                                surroundingTile.revealTile();
                             }
                         }
-                        const right = axis.value.surroundBoxesIndex.right;
-                        const left = axis.value.surroundBoxesIndex.left;
-                        const top = axis.value.surroundBoxesIndex.top;
-                        const bottom = axis.value.surroundBoxesIndex.bottom;
-                        const topRight = axis.value.surroundBoxesIndex.topRight;
-                        const topLeft = axis.value.surroundBoxesIndex.topLeft;
-                        const bottomRight = axis.value.surroundBoxesIndex.bottomRight;
-                        const bottomLeft = axis.value.surroundBoxesIndex.bottomLeft;
-                        right !== null && revealSurroundingBoxes(right);
-                        left !== null && revealSurroundingBoxes(left);
-                        top !== null && revealSurroundingBoxes(top);
-                        bottom !== null && revealSurroundingBoxes(bottom);
-                        topRight !== null && revealSurroundingBoxes(topRight);
-                        topLeft !== null && revealSurroundingBoxes(topLeft);
-                        bottomRight !== null && revealSurroundingBoxes(bottomRight);
-                        bottomLeft !== null && revealSurroundingBoxes(bottomLeft);
+                        const right = axis.value.surroundTilesIndex.right;
+                        const left = axis.value.surroundTilesIndex.left;
+                        const top = axis.value.surroundTilesIndex.top;
+                        const bottom = axis.value.surroundTilesIndex.bottom;
+                        const topRight = axis.value.surroundTilesIndex.topRight;
+                        const topLeft = axis.value.surroundTilesIndex.topLeft;
+                        const bottomRight = axis.value.surroundTilesIndex.bottomRight;
+                        const bottomLeft = axis.value.surroundTilesIndex.bottomLeft;
+                        right !== null && revealSurroundingTiles(right);
+                        left !== null && revealSurroundingTiles(left);
+                        top !== null && revealSurroundingTiles(top);
+                        bottom !== null && revealSurroundingTiles(bottom);
+                        topRight !== null && revealSurroundingTiles(topRight);
+                        topLeft !== null && revealSurroundingTiles(topLeft);
+                        bottomRight !== null && revealSurroundingTiles(bottomRight);
+                        bottomLeft !== null && revealSurroundingTiles(bottomLeft);
                         return { type };
                     }
                     return { type };
@@ -148,9 +147,9 @@ export default function useMine(options: { totalMineCount: Ref<number>; panelSiz
                     flagType,
                     revealType,
 
-                    getBoxRevealType,
-                    // updateBoxRevealType,
-                    revealBox,
+                    getTileRevealType,
+                    // updateTileRevealType,
+                    revealTile,
                     updateFlagType,
                 };
             })

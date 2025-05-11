@@ -1,7 +1,7 @@
 import { toRef, ref, computed, type Ref } from "vue";
-import type { FlagType, RevealType, UpdateFlagType, GetBoxRevealType, UpdateBoxRevealType, SingleMineBoxAxis } from "@/types";
+import type { FlagType, RevealType, UpdateFlagType, GetTileRevealType, UpdateTileRevealType, SingleMineTileAxis } from "@/types";
 
-export default function useMineBox(x: number, y: number, refPanelSize: number, refMinesIndexArray: Ref<number[]>) {
+export default function useMineTile(x: number, y: number, refPanelSize: number, refMinesIndexArray: Ref<number[]>) {
     const minesIndexArray = toRef(refMinesIndexArray, "value");
     const panelSize = toRef(refPanelSize);
 
@@ -17,10 +17,10 @@ export default function useMineBox(x: number, y: number, refPanelSize: number, r
         return flagType.value;
     });
 
-    const axis = computed<SingleMineBoxAxis>(() => ({
+    const axis = computed<SingleMineTileAxis>(() => ({
         x,
         y,
-        surroundBoxesIndex: {
+        surroundTilesIndex: {
             right: x + 1 > panelSize.value - 1 ? null : y * panelSize.value + (x + 1),
             left: x - 1 < 0 ? null : y * panelSize.value + (x - 1),
             top: y - 1 < 0 ? null : (y - 1) * panelSize.value + x,
@@ -32,20 +32,20 @@ export default function useMineBox(x: number, y: number, refPanelSize: number, r
         },
     }));
 
-    const getBoxRevealType: GetBoxRevealType = () => {
+    const getTileRevealType: GetTileRevealType = () => {
         if (isMine.value) {
             return "mine";
         }
-        return Object.values(axis.value.surroundBoxesIndex).reduce<number>((total, otherBoxIndex) => {
-            if (otherBoxIndex !== null && minesIndexArray.value.includes(otherBoxIndex)) {
+        return Object.values(axis.value.surroundTilesIndex).reduce<number>((total, otherTileIndex) => {
+            if (otherTileIndex !== null && minesIndexArray.value.includes(otherTileIndex)) {
                 return total + 1;
             }
             return total;
         }, 0);
     };
 
-    const updateBoxRevealType: UpdateBoxRevealType = () => {
-        const type = getBoxRevealType();
+    const updateTileRevealType: UpdateTileRevealType = () => {
+        const type = getTileRevealType();
         revealType.value = type;
         return {
             ok: true,
@@ -79,11 +79,11 @@ export default function useMineBox(x: number, y: number, refPanelSize: number, r
         flagType,
         revealType,
 
-        getBoxRevealType,
-        updateBoxRevealType,
+        getTileRevealType,
+        updateTileRevealType,
         updateFlagType,
     };
 }
 
-export type UseMineBoxReturn = ReturnType<typeof useMineBox>;
+export type UseMineTileReturn = ReturnType<typeof useMineTile>;
 
