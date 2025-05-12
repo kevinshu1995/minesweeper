@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import type { GameStatus } from "@/types";
 import useTimer from "@/composables/useTimer";
 import useMineSet from "@/composables/useMineSet";
@@ -12,13 +12,37 @@ export const useGameStore = defineStore("game", () => {
     const gameTotalMineCount = ref(0);
     const gamePanelSize = ref(0);
     const gameLevel = ref<GameLevel | null>(null);
-    const { mineSets, panelSize, hasInitialized, initMineSets } = useMineSet({ totalMineCount: gameTotalMineCount, panelSize: gamePanelSize });
+    const { mineSets, panelSize, hasInitialized, isGameOver, isGameWon, initMineSets } = useMineSet({ totalMineCount: gameTotalMineCount, panelSize: gamePanelSize });
 
     const gameStatus = ref<GameStatus>("idle");
     const status = computed(() => gameStatus.value);
 
+    const isTimerPaused = computed(() => {
+        return isPaused.value && status.value === "playing";
+    });
+
+    watch(isGameOver, val => {
+        if (val === true) gameOver();
+    });
+
+    watch(isGameWon, val => {
+        if (val === true) gameWon();
+    });
+
     function startGame() {
         timerRestart();
+    }
+    function gameOver() {
+        gameStatus.value = "gameOver";
+        if (isPaused.value === false) {
+            timerToggle();
+        }
+    }
+    function gameWon() {
+        gameStatus.value = "gameWon";
+        if (isPaused.value === false) {
+            timerToggle();
+        }
     }
     function toggleGame() {
         timerToggle();
@@ -77,7 +101,7 @@ export const useGameStore = defineStore("game", () => {
     return {
         status,
         timeInSeconds,
-        isTimerPaused: isPaused,
+        isTimerPaused,
 
         hasInitialized,
         mineSets,
@@ -90,6 +114,7 @@ export const useGameStore = defineStore("game", () => {
         toggleGame,
         resetGame,
         setupGame,
+        gameOver,
     };
 });
 

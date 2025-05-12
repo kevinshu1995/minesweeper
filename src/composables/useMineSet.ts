@@ -1,5 +1,6 @@
 import { ref, computed, toRef, type Ref, type ComputedRef } from "vue";
 import useMineBox, { type UseMineBoxReturn } from "./useSingleMineBox";
+import { is } from "date-fns/locale";
 
 function getRandomNumberInRange(max: number, count: number) {
     const min = 0;
@@ -41,8 +42,20 @@ export default function useMine(options: { totalMineCount: Ref<number>; panelSiz
 
     /** @description 所有地雷的 index 陣列 */
     const minesIndexArray = ref<number[]>([]);
+    const flagIndexSet = ref<number[]>([]);
 
     const hasRevealedMine = ref(false);
+    const isGameOver = computed(() => hasRevealedMine.value);
+    const isGameWon = computed(() => {
+        if (mineSets.value === null) {
+            return false;
+        }
+        flagIndexSet.value = [...new Set(flagIndexSet.value)];
+        const _flagIndexSet = flagIndexSet.value;
+        const _minesIndexArray = minesIndexArray.value;
+        const isAllMinesFlagged = _flagIndexSet.every(i => _minesIndexArray.includes(i));
+        return isAllMinesFlagged && _flagIndexSet.length === _minesIndexArray.length;
+    });
 
     /** @description 初始化整個遊戲的二維陣列 */
     const initMineSets = () => {
@@ -61,7 +74,7 @@ export default function useMine(options: { totalMineCount: Ref<number>; panelSiz
 
                     getBoxRevealType,
                     updateBoxRevealType,
-                    updateFlagType,
+                    updateFlagType: _updateFlagType,
                 } = useMineBox(x, y, panelSize.value, minesIndexArray);
 
                 /** @description 此格的 id */
@@ -109,6 +122,22 @@ export default function useMine(options: { totalMineCount: Ref<number>; panelSiz
                     return { type };
                 };
 
+                function updateFlagType() {
+                    const result = _updateFlagType();
+                    if (result?.ok === false) {
+                        return result;
+                    }
+
+                    if (result?.type === "flag") {
+                        flagIndexSet.value.push(index.value);
+                        flagIndexSet.value = [...new Set(flagIndexSet.value)];
+                    } else {
+                        flagIndexSet.value = flagIndexSet.value.filter(i => i !== index.value);
+                    }
+
+                    return result;
+                }
+
                 return {
                     id,
                     axis,
@@ -144,6 +173,8 @@ export default function useMine(options: { totalMineCount: Ref<number>; panelSiz
         minesIndexArray,
         hasInitialized,
         hasRevealedMine,
+        isGameOver,
+        isGameWon,
         initMineSets,
     };
 }
