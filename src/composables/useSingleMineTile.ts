@@ -2,7 +2,7 @@ import { toRef, ref, computed, type Ref } from "vue";
 import type { FlagType, RevealType, UpdateFlagType, GetTileRevealType, UpdateTileRevealType, SingleMineTileAxis } from "@/types";
 
 export default function useMineTile(x: number, y: number, refPanelSize: number, refMinesIndexArray: Ref<number[]>) {
-    const minesIndexArray = toRef(refMinesIndexArray, "value");
+    const minesIndexArray = toRef(refMinesIndexArray);
     const panelSize = toRef(refPanelSize);
 
     const index = computed(() => y * panelSize.value + x);
