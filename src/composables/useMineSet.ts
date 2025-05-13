@@ -82,22 +82,10 @@ export default function useMine(options: { totalMineCount: Ref<number>; panelSiz
                                 surroundingTile.revealTile();
                             }
                         }
-                        const right = axis.value.surroundTilesIndex.right;
-                        const left = axis.value.surroundTilesIndex.left;
-                        const top = axis.value.surroundTilesIndex.top;
-                        const bottom = axis.value.surroundTilesIndex.bottom;
-                        const topRight = axis.value.surroundTilesIndex.topRight;
-                        const topLeft = axis.value.surroundTilesIndex.topLeft;
-                        const bottomRight = axis.value.surroundTilesIndex.bottomRight;
-                        const bottomLeft = axis.value.surroundTilesIndex.bottomLeft;
-                        right !== null && revealSurroundingTiles(right);
-                        left !== null && revealSurroundingTiles(left);
-                        top !== null && revealSurroundingTiles(top);
-                        bottom !== null && revealSurroundingTiles(bottom);
-                        topRight !== null && revealSurroundingTiles(topRight);
-                        topLeft !== null && revealSurroundingTiles(topLeft);
-                        bottomRight !== null && revealSurroundingTiles(bottomRight);
-                        bottomLeft !== null && revealSurroundingTiles(bottomLeft);
+                        const { surroundTilesIndex } = axis.value;
+                        Object.values(surroundTilesIndex).forEach(index => {
+                            if (index !== null) revealSurroundingTiles(index);
+                        });
                         return { type };
                     }
                     return { type };
