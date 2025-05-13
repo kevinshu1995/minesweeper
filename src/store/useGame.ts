@@ -22,23 +22,23 @@ export const useGameStore = defineStore("game", () => {
     });
 
     watch(isGameOver, val => {
-        if (val === true) gameOver();
+        if (val === true) _gameOver();
     });
 
     watch(isGameWon, val => {
-        if (val === true) gameWon();
+        if (val === true) _gameWon();
     });
 
     function startGame() {
         timerRestart();
     }
-    function gameOver() {
+    function _gameOver() {
         gameStatus.value = "gameOver";
         if (isPaused.value === false) {
             timerToggle();
         }
     }
-    function gameWon() {
+    function _gameWon() {
         gameStatus.value = "gameWon";
         if (isPaused.value === false) {
             timerToggle();
@@ -114,7 +114,6 @@ export const useGameStore = defineStore("game", () => {
         toggleGame,
         resetGame,
         setupGame,
-        gameOver,
     };
 });
 
