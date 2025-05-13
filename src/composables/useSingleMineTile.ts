@@ -36,12 +36,9 @@ export default function useMineTile(x: number, y: number, refPanelSize: number, 
         if (isMine.value) {
             return "mine";
         }
-        return Object.values(axis.value.surroundTilesIndex).reduce<number>((total, otherTileIndex) => {
-            if (otherTileIndex !== null && minesIndexArray.value.includes(otherTileIndex)) {
-                return total + 1;
-            }
-            return total;
-        }, 0);
+        return Object.values(axis.value.surroundTilesIndex)
+            .filter((index): index is number => index !== null)
+            .filter(index => minesIndexArray.value.includes(index)).length;
     };
 
     const updateTileRevealType: UpdateTileRevealType = () => {
