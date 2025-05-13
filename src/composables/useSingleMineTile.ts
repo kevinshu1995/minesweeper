@@ -1,6 +1,16 @@
 import { toRef, ref, computed, type Ref } from "vue";
 import type { FlagType, RevealType, UpdateFlagType, GetTileRevealType, UpdateTileRevealType, SingleMineTileAxis } from "@/types";
 
+function useMineBoxUtils(panelSize: Ref<number>) {
+    const calculateIndex = (yPos: number, xPos: number): number | null => {
+        if (xPos < 0 || xPos >= panelSize.value || yPos < 0 || yPos >= panelSize.value) {
+            return null;
+        }
+        return yPos * panelSize.value + xPos;
+    };
+    return { calculateIndex };
+}
+
 export default function useMineTile(x: number, y: number, refPanelSize: number, refMinesIndexArray: Ref<number[]>) {
     const minesIndexArray = toRef(refMinesIndexArray);
     const panelSize = toRef(refPanelSize);
@@ -17,18 +27,20 @@ export default function useMineTile(x: number, y: number, refPanelSize: number, 
         return flagType.value;
     });
 
+    const { calculateIndex } = useMineBoxUtils(panelSize);
+
     const axis = computed<SingleMineTileAxis>(() => ({
         x,
         y,
         surroundTilesIndex: {
-            right: x + 1 > panelSize.value - 1 ? null : y * panelSize.value + (x + 1),
-            left: x - 1 < 0 ? null : y * panelSize.value + (x - 1),
-            top: y - 1 < 0 ? null : (y - 1) * panelSize.value + x,
-            bottom: y + 1 > panelSize.value - 1 ? null : (y + 1) * panelSize.value + x,
-            topRight: y - 1 < 0 || x + 1 > panelSize.value - 1 ? null : (y - 1) * panelSize.value + (x + 1),
-            topLeft: y - 1 < 0 || x - 1 < 0 ? null : (y - 1) * panelSize.value + (x - 1),
-            bottomRight: y + 1 > panelSize.value - 1 || x + 1 > panelSize.value - 1 ? null : (y + 1) * panelSize.value + (x + 1),
-            bottomLeft: y + 1 > panelSize.value - 1 || x - 1 < 0 ? null : (y + 1) * panelSize.value + (x - 1),
+            right: calculateIndex(y, x + 1),
+            left: calculateIndex(y, x - 1),
+            top: calculateIndex(y - 1, x),
+            bottom: calculateIndex(y + 1, x),
+            topRight: calculateIndex(y - 1, x + 1),
+            topLeft: calculateIndex(y - 1, x - 1),
+            bottomRight: calculateIndex(y + 1, x + 1),
+            bottomLeft: calculateIndex(y + 1, x - 1),
         },
     }));
 
