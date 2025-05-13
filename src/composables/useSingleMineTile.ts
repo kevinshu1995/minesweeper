@@ -59,11 +59,17 @@ export default function useMineTile(x: number, y: number, refPanelSize: number, 
                 ok: false,
             };
         }
-        const types: FlagType[] = ["flag", "question", null];
-        const currentFlagTypeIndex = types.findIndex(type => type === flagType.value);
-        const nextFlagTypeIndex = (currentFlagTypeIndex + 1) % types.length;
 
-        flagType.value = types[nextFlagTypeIndex];
+        const flagTransition: Record<string, FlagType> = {
+            null: "flag",
+            flag: "question",
+            question: null,
+        };
+
+        // 使用目前旗標值作為鍵來取得下一個狀態
+        const currentFlag = String(flagType.value);
+        flagType.value = flagTransition[currentFlag];
+
         return {
             ok: true,
             type: flagType.value,
