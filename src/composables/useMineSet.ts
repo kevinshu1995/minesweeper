@@ -31,11 +31,10 @@ export default function useMine(options: { totalMineCount: Ref<number>; panelSiz
         if (mineSets.value === null) {
             return false;
         }
-        flagIndexSet.value = [...new Set(flagIndexSet.value)];
-        const _flagIndexSet = flagIndexSet.value;
-        const _minesIndexArray = minesIndexArray.value;
-        const isAllMinesFlagged = _flagIndexSet.every(i => _minesIndexArray.includes(i));
-        return isAllMinesFlagged && _flagIndexSet.length === _minesIndexArray.length;
+        if (minesIndexArray.value.length === 0) return false;
+        if (flagIndexSet.value.length === 0) return false;
+        const isAllMinesFlagged = minesIndexArray.value.every(i => flagIndexSet.value.includes(i));
+        return isAllMinesFlagged && flagIndexSet.value.length === minesIndexArray.value.length;
     });
 
     /** @description 初始化整個遊戲的二維陣列 */
